@@ -1,30 +1,6 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('Advertising.csv')
-m_d, n_d = df.values.shape
-
-df = (df - df.min())/(df.max() - df.min())
-
-print('Data and label:')
-print(df.values)
-
-inputs = (df.values[:m_d - 10, 0:n_d - 1])
-outputs = (df.values[:m_d - 10, n_d-1:n_d])
-
-Xtest = (df.values[m_d - 10:m_d, 0:n_d - 1])
-Ytest = (df.values[m_d - 10:m_d, n_d-1:n_d])
-
-layers = [n_d-1, 3, 4, 1]
-print(layers)
-nL = len(layers)
-# np.concatenate()
-# decalre layers
-
-# init weights
-w = [np.random.randn(l2, l1+1) for l2, l1 in zip(layers[1:], layers[:-1])]
-
-
 def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
 
@@ -77,28 +53,43 @@ def backprop(x, y):
 def predict(x):
     z, a = feedforward(x)
     return z, a
-# print(w)
 
-loop = 10000
-eta = 0.002
 
-# print(w)
+if __name__ == '__main__':
+    df = pd.read_csv('Advertising.csv')
+    m_d, n_d = df.values.shape
 
-# Train
-while loop > 0:
-    w_grad = backprop(inputs, outputs)
-    w = [W - eta*W_grad.T for W, W_grad in zip(w, w_grad)]
-    loop -= 1
+    # Chuẩn hoá [0..1]
+    df = (df - df.min())/(df.max() - df.min())
 
-# print(w)
+    print('Data and label:')
+    print(df.values)
 
-z, a = predict(np.array([[230.1,37.8,69.2]]))
+    inputs = (df.values[:m_d - 10, 0:n_d - 1])
+    outputs = (df.values[:m_d - 10, n_d-1:n_d])
 
-print(a[-1])
+    Xtest = (df.values[m_d - 10:m_d, 0:n_d - 1])
+    Ytest = (df.values[m_d - 10:m_d, n_d-1:n_d])
 
-print('Final weights: \n', w)
+    layers = [n_d-1, 3, 4, 1]
+    print(layers)
+    nL = len(layers)
 
-print('Evaluate:')
-for i in range(10):
-    z, a = predict(np.array([Xtest[i]]))
-    print('Predict:', a[-1], ' ---- result: ', Ytest[i][0])
+    loop = 10000
+    eta = 0.002
+    w = [np.random.randn(l2, l1+1) for l2, l1 in zip(layers[1:], layers[:-1])]
+    
+    # Train
+    while loop > 0:
+        w_grad = backprop(inputs, outputs)
+        w = [W - eta*W_grad.T for W, W_grad in zip(w, w_grad)]
+        loop -= 1
+
+    # init weights
+
+    print('Final weights: \n', w)
+
+    print('Evaluate:')
+    for i in range(10):
+        z, a = predict(np.array([Xtest[i]]))
+        print('Predict:', a[-1], ' ---- result: ', Ytest[i][0])

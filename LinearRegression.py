@@ -1,26 +1,12 @@
 import numpy as np
 import pandas as pd
 # from matplotlib import py_trainplot
-df = pd.read_csv('Advertising.csv')
-
-df = (df - df.mean())/df.std()
-
-# Tạo tập train
-m, n = df.values.shape
-X_train = df.values[:m-10, 0:n-1]
-y_train = df.values[:m-10, n-1:n]
-X_train = np.insert(X_train, 0, values=1, axis=1)
-
-# Tạo tập test
-X_test = df.values[m-10:, 0:n-1]
-y_test = df.values[m-10:, n-1:n]
-X_test = np.insert(X_test, 0, values=1, axis=1)
 
 # Hàm dự đoán: ^y = X*w X[m,n], w[n,1]
 def pred(X_train, w):
     return np.dot(X_train, w)
 
-# Hàm tính loss mean square 
+# Hàm tính loss mean square
 def computeLoss(X_train, y_train, w):
     diff = np.power((pred(X_train, w) - y_train), 2)
     loss = (1.0/(2 * len(X_train))) * np.sum(diff)
@@ -40,15 +26,33 @@ def gradient_descent(X_train, y_train, w, alpha, loop):
         y_train = y_train[miX_train_id]
     return w
 
-w = np.zeros((X_train.shape[1], 1))
 
-alpha = 0.003
-loop = 1000
+if __name__ == '__main__':
+    df = pd.read_csv('Advertising.csv')
 
-w = gradient_descent(X_train, y_train, w, alpha, loop)
+    df = (df - df.mean())/df.std()
 
-print('Final weights: \n', w)
+    # Tạo tập train
+    m, n = df.values.shape
+    X_train = df.values[:m-10, 0:n-1]
+    y_train = df.values[:m-10, n-1:n]
+    X_train = np.insert(X_train, 0, values=1, axis=1)
 
-print('Evaluate:')
-for i in range(10):
-    print('Predict:', pred(X_test[i], w)[0], ' ---- result: ', y_test[i][0])
+    # Tạo tập test
+    X_test = df.values[m-10:, 0:n-1]
+    y_test = df.values[m-10:, n-1:n]
+    X_test = np.insert(X_test, 0, values=1, axis=1)
+
+    w = np.zeros((X_train.shape[1], 1))
+
+    alpha = 0.003
+    loop = 1000
+
+    w = gradient_descent(X_train, y_train, w, alpha, loop)
+
+    print('Final weights: \n', w)
+
+    print('Evaluate:')
+    for i in range(10):
+        print('Predict:', pred(X_test[i], w)[0], ' ---- result: ', y_test[i][0])
+

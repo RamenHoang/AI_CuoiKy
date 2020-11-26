@@ -1,23 +1,6 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('ex2data1.csv')
-# df = (df - df.mean())/df.std()
-
-m, n = df.values.shape
-# Tạo tập train
-X_train = df.values[:m-10, 0:n-1]
-y_train = df.values[:m-10, n-1:n]
-X_train = np.insert(X_train, 0, values=1, axis=1)
-# Tạo tập test
-X_test = df.values[m-10:, 0:n-1]
-y_test = df.values[m-10:, n-1:n]
-X_test = np.insert(X_test, 0, values=1, axis=1)
-
-# threshold
-threshold = 0.5
-
-
 # hàm tính sigmoid
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
@@ -41,20 +24,36 @@ def grad(X, y, w, alpha, loop):
         y = y[mix_id]
     return w
 
+if __name__ == '__main__':
+    df = pd.read_csv('ex2data1.csv')
+    # df = (df - df.mean())/df.std()
 
-w = np.random.randn(n, 1)
-loop = 10000
-alpha = 0.0002
+    m, n = df.values.shape
+    # Tạo tập train
+    X_train = df.values[:m-10, 0:n-1]
+    y_train = df.values[:m-10, n-1:n]
+    X_train = np.insert(X_train, 0, values=1, axis=1)
+    # Tạo tập test
+    X_test = df.values[m-10:, 0:n-1]
+    y_test = df.values[m-10:, n-1:n]
+    X_test = np.insert(X_test, 0, values=1, axis=1)
 
-w = grad(X_train, y_train, w, alpha, loop)
+    # threshold
+    threshold = 0.5
 
-print('Final weights: \n', w)
+    w = np.random.randn(n, 1)
+    loop = 10000
+    alpha = 0.0002
 
-print('Evaluate:')
-for i in range(10):
-    pred_v = sigmoid(np.dot(X_test[i], w))[0]
-    if (pred_v > threshold):
-        pred_v = 1
-    else:
-        pred_v = 0
-    print('Predict:', pred_v, ' ---- result: ', y_test[i][0])
+    w = grad(X_train, y_train, w, alpha, loop)
+
+    print('Final weights: \n', w)
+
+    print('Evaluate:')
+    for i in range(10):
+        pred_v = sigmoid(np.dot(X_test[i], w))[0]
+        if (pred_v > threshold):
+            pred_v = 1
+        else:
+            pred_v = 0
+        print('Predict:', pred_v, ' ---- result: ', y_test[i][0])

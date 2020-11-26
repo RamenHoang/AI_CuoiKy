@@ -2,11 +2,6 @@ import numpy as np
 from pandas import read_csv
 from matplotlib import pyplot as plt
 
-df = read_csv('ex2data1.csv')
-X = df.values[:, 0:2]
-
-k = 6
-
 def plot_result(X, y, centers, k, title):
     for i in range(k):
         plt.scatter(X[y == i, 0],
@@ -64,6 +59,13 @@ def kmeans(X, k):
     
     return centers, y
 
-centers, y = kmeans(X, k);
 
-plot_result(X, y, centers, k, 'Final')
+if __name__ == '__main__':
+    df = read_csv('ex2data1.csv')
+    X = df.values[:, 0:2]
+
+    k = 6
+
+    centers, y = kmeans(X, k);
+
+    plot_result(X, y, centers, k, 'Final')
