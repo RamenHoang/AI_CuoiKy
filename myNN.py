@@ -15,7 +15,7 @@ def add_bias(a):
 
 
 def feedforward(x):
-    z = []
+    z = [] 
     a = [add_bias(x)]
     for i in range(1, nL):
         z_i = np.dot(a[i-1], w[i-1].T)
@@ -33,12 +33,12 @@ def backprop(x, y):
     z, a = feedforward(x)
 
     # loss = 1.0 * (y^ - y) ** 2 / 2
-    d_a = 2*(a[-1] - y)
+    d_a = 2*(a[-1] - y) # dloss / dy^
 
-    r = None
+    r = None 
     for l in range(1, nL):
         i = -l
-        d_z = d_sigmoid(z[i])
+        d_z = d_sigmoid(z[i]) #da/dz
         if i < -1:
             r = np.dot(r, w[i + 1][:,1:])*d_z
         if i == -1:
@@ -70,7 +70,7 @@ if __name__ == '__main__':
 
     Xtest = (df.values[m_d - 10:m_d, 0:n_d - 1])
     Ytest = (df.values[m_d - 10:m_d, n_d-1:n_d])
-
+    
     layers = [n_d-1, 3, 4, 1]
     print(layers)
     nL = len(layers)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     
     # Train
     while loop > 0:
-        w_grad = backprop(inputs, outputs)
+        w_grad = backprop(inputs, outputs) # trả về các các đạo hàm của hàm mất mát theo w của từng lớp
         w = [W - eta*W_grad.T for W, W_grad in zip(w, w_grad)]
         loop -= 1
 
